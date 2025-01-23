@@ -34,7 +34,7 @@ module Api
         end
 
         # Dynamically permit the required keys for the event type
-        create_payload(event_type)
+        permit_payload(event_type)
 
         # Validate that required keys are present in the body
         missing_keys = ZendeskEventTypeRules.required_keys_for(event_type) - body.keys.map(&:to_sym)
@@ -48,7 +48,7 @@ module Api
         ZendeskEventTypeRules.supported?(event_type)
       end
 
-      def create_payload(event_type)
+      def permit_payload(event_type)
         permitted_strcuture = ZendeskEventTypeRules.permit_str_for(event_type)
         @payload = params.require(:payload).permit(*permitted_strcuture)
       end
