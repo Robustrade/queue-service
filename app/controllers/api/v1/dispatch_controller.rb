@@ -2,14 +2,14 @@
 
 module Api
   module V1
-    # DispatchController handles the dispatching of messages to the appropriate queue.
-    # It validates the queue name and sanitizes the parameters before publishing the message.
     class DispatchController < ApplicationController
-      before_action :validate_queue_name, only: [:create]
-      before_action :sanitize_and_validate_params, only: [:create]
+      before_action :get_json_file!, only: [:create]
+      before_action :validate_params_structure, only: [:create]
+      before_action :validate_params_data, only: [:create]
+      before_action :create_desired_str, only: [:create]
 
       def create
-        MessagePublisher.publish(params[:queue_name], @payload)
+        MessagePublisher.publish(params[:queue_name], @desired_str)
 
         render json: { message: 'Message sent to the queue' }, status: :ok
       rescue StandardError => e
@@ -18,39 +18,65 @@ module Api
 
       private
 
-      def validate_queue_name
-        return if ::QueueValidator.valid?(params[:queue_name])
+      def get_json_file!
+        file_name = params[:queue_name]
+        return render json: { error: 'Queue name is required' }, status: :bad_request unless file_name.present?
 
-        render json: { error: "Invalid queue name: #{params[:queue_name]}" }, status: :bad_request
+        file_path = Rails.root.join('lib', 'json_definitions', "#{file_name}.json")
+
+        @file = JSON.parse(File.read(file_path))
+      rescue Errno::ENOENT
+        render json: {
+                 error: "File not found for queue: #{file_name}. File should be present in lib/json_definitions as #{file_name}.json"
+               },
+               status: :not_found
       end
 
-      def sanitize_and_validate_params
-        event_type = params.dig(:payload, :type)
-        body = params.dig(:payload, :body)
+      def validate_params_structure
+        errors = ParamsValidator.validate_structure(@file, params.to_unsafe_h['dispatch'])
 
-        # Validate the event type
-        unless validate_event_type(event_type)
-          return render json: { error: "Unsupported event type: #{event_type}" }, status: :bad_request
+        return unless errors.any?
+
+        render json: {
+          error: 'Parameter structure validation failed',
+          details: errors
+        }, status: :bad_request
+      rescue StandardError => e
+        render json: { error: e.message }, status: :bad_request
+      end
+
+      def validate_params_data
+        payload = params.to_unsafe_h['dispatch']['payload']
+
+        errors = ParamsValidator.validate_data(payload)
+
+        return unless errors.any?
+
+        render json: {
+          error: 'Parameter data validation failed',
+          details: errors
+        }, status: :bad_request
+      rescue StandardError => e
+        render json: { error: e.message }, status: :bad_request
+      end
+
+      def create_desired_str # for zendesk integration
+        unless params[:event_name].present? && params[:payload].present?
+          return render json: { error: 'Event name and payload are required' }, status: :bad_request
         end
 
-        # Dynamically permit the required keys for the event type
-        permit_payload(event_type)
+        @desired_str = {
+          event_name: params[:event_name],
+          body: {}
+        }
 
-        # Validate that required keys are present in the body
-        missing_keys = ZendeskEventTypeRules.required_keys_for(event_type) - body.keys.map(&:to_sym)
-        return unless missing_keys.present?
+        params[:payload].each do |item|
+          @desired_str[:body][item[:name]] = item[:datatype]
+        end
 
-        render json: { error: "Missing required keys: #{missing_keys.join(', ')}" }, status: :bad_request
-        nil
-      end
-
-      def validate_event_type(event_type)
-        ZendeskEventTypeRules.supported?(event_type)
-      end
-
-      def permit_payload(event_type)
-        permitted_strcuture = ZendeskEventTypeRules.permit_str_for(event_type)
-        @payload = params.require(:payload).permit(*permitted_strcuture)
+        @desired_str
+      rescue StandardError => e
+        render json: { error: e.message }, status: :bad_request
       end
     end
   end
