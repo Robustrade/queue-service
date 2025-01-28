@@ -1834,6 +1834,8 @@ GEM
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
+    prometheus_exporter (2.2.0)
+      webrick
     propshaft (1.1.0)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)
@@ -1996,6 +1998,7 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
+    webrick (1.9.1)
     websocket (1.2.11)
     websocket-driver (0.7.7)
       base64
@@ -2035,6 +2038,7 @@ DEPENDENCIES
   kamal
   papertrail
   pg (~> 1.1)
+  prometheus_exporter
   propshaft
   puma (>= 5.0)
   pundit

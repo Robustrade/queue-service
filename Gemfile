@@ -104,3 +104,5 @@ group :test do
   # database cleaner to clear with old records
   gem 'database_cleaner-active_record'
 end
+
+gem 'prometheus_exporter'

@@ -28,7 +28,7 @@ class ParamsValidator
       datatype = item['datatype']
       regex_validation = item['regex_validation']
 
-      unless name.presence && datatype.presence && regex_validation.presence
+      unless name && datatype && regex_validation
         errors << "Missing required key(s) / Value(s) at index #{index}."
         next
       end
