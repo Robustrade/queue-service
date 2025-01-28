@@ -6,10 +6,10 @@ module Api
       before_action :get_json_file!, only: [:create]
       before_action :validate_params_structure, only: [:create]
       before_action :validate_params_data, only: [:create]
-      before_action :create_desired_str, only: [:create]
+      before_action :create_requested_str, only: [:create]
 
       def create
-        MessagePublisher.publish(params[:queue_name], @desired_str)
+        MessagePublisher.publish(params[:queue_name], @requested_str)
 
         render json: { message: 'Message sent to the queue' }, status: :ok
       rescue StandardError => e
@@ -60,21 +60,21 @@ module Api
         render json: { error: e.message }, status: :bad_request
       end
 
-      def create_desired_str # for zendesk integration
+      def create_requested_str # for zendesk integration
         unless params[:event_name].present? && params[:payload].present?
           return render json: { error: 'Event name and payload are required' }, status: :bad_request
         end
 
-        @desired_str = {
+        @requested_str = {
           event_name: params[:event_name],
           body: {}
         }
 
         params[:payload].each do |item|
-          @desired_str[:body][item[:name]] = item[:datatype]
+          @requested_str[:body][item[:name]] = item[:datatype]
         end
 
-        @desired_str
+        @requested_str
       rescue StandardError => e
         render json: { error: e.message }, status: :bad_request
       end
