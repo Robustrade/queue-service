@@ -19,22 +19,22 @@ RSpec.describe ParamsValidator do
   describe '.validate_data' do
     it 'validates correct payload' do
       payload = [
-        { 'name' => 'param1', 'datatype' => 'string', 'regex_validation' => '.*' },
-        { 'name' => 'param2', 'datatype' => '123', 'regex_validation' => '\d+' }
+        { 'name' => 'param1', 'value' => 'string', 'regex_validation' => '.*' },
+        { 'name' => 'param2', 'value' => '123', 'regex_validation' => '\d+' }
       ]
       expect(ParamsValidator.validate_data(payload)).to be_empty
     end
 
     it 'returns error for missing keys in payload' do
       payload = [
-        { 'name' => 'param1', 'datatype' => 'string' }
+        { 'name' => 'param1', 'value' => 'string' }
       ]
       expect(ParamsValidator.validate_data(payload)).to include('Missing required key(s) / Value(s) at index 0.')
     end
 
     it 'returns error for invalid regex validation' do
       payload = [
-        { 'name' => 'param1', 'datatype' => 'string', 'regex_validation' => '[' }
+        { 'name' => 'param1', 'value' => 'string', 'regex_validation' => '[' }
       ]
       expect { ParamsValidator.validate_data(payload) }.to raise_error(RuntimeError, /Invalid regex/)
     end

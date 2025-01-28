@@ -25,15 +25,15 @@ class ParamsValidator
 
     payload.each_with_index do |item, index|
       name = item['name']
-      datatype = item['datatype']
+      value = item['value']
       regex_validation = item['regex_validation']
 
-      unless name && datatype && regex_validation
+      unless name && value && regex_validation
         errors << "Missing required key(s) / Value(s) at index #{index}."
         next
       end
 
-      errors << "Invalid value for 'datatype' at index #{index}." unless regex_valid?(datatype, regex_validation)
+      errors << "Invalid value for 'value' at index #{index}." unless regex_valid?(value, regex_validation)
     end
 
     errors

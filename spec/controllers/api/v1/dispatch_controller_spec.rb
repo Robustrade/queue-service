@@ -8,8 +8,8 @@ RSpec.describe Api::V1::DispatchController, type: :controller do
         event_name: 'test_event',
         dispatch: {
           payload: [
-            { name: 'param1', datatype: 'string', regex_validation: '.*' },
-            { name: 'param2', datatype: '123', regex_validation: '\d+' }
+            { name: 'param1', value: 'string', regex_validation: '.*' },
+            { name: 'param2', value: '123', regex_validation: '\d+' }
           ]
         }
       }
@@ -20,7 +20,7 @@ RSpec.describe Api::V1::DispatchController, type: :controller do
         queue_name: 'test_queue',
         dispatch: {
           payload: [
-            { name: 'param1', datatype: 'string' }
+            { name: 'param1', value: 'string' }
           ]
         }
       }
@@ -28,7 +28,7 @@ RSpec.describe Api::V1::DispatchController, type: :controller do
 
     before do
       allow(MessagePublisher).to receive(:publish)
-      allow(File).to receive(:read).and_return('{"payload": [{"name": "param1", "datatype": "string", "regex_validation": ".*"}, {"name": "param2", "datatype": "integer", "regex_validation": "\\d+"}]}')
+      allow(File).to receive(:read).and_return('{"payload": [{"name": "param1", "value": "string", "regex_validation": ".*"}, {"name": "param2", "value": "integer", "regex_validation": "\\d+"}]}')
     end
 
     context 'with valid params' do
