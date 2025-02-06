@@ -15,7 +15,7 @@ class MessageProcessorWorker
   def process_message(message)
     event_name = message['event_name']
     event = Event.find_by(name: event_name)
-    return unless event
+    Rails.logger.error { "Event not found: #{event_name}" } && return unless event
 
     received_message = event.message_receiveds.create(
       req_payload: message['payload'],
@@ -23,7 +23,7 @@ class MessageProcessorWorker
     )
 
     metadata = event.message_metadata
-    return unless valid_message?(message['payload'], metadata)
+    return unless valid_message?(message['payload'], metadata, received_message)
 
     received_message.update(
       enqueued_at: Time.current.utc
@@ -31,21 +31,30 @@ class MessageProcessorWorker
 
     response = call_callback_url(event.callback_url, message['payload'], event.service_owner.secret_token)
 
-    received_message.update(
-      worked_processed_at: Time.current.utc,
-      status_code: response.code,
-      response_payload: response.parsed_response,
-      total_retries: received_message.total_retries + 1
-    )
+    if response.code == 200
+      received_message.update(
+        worked_processed_at: Time.current.utc,
+        status_code: response.code,
+        response_payload: response.parsed_response,
+        total_retries: received_message.total_retries + 1
+      )
+    else
+      received_message.update(
+        error_response: response,
+        total_retries: received_message.total_retries + 1
+      )
+    end
   end
 
-  def valid_message?(payload, metadata)
+  def valid_message?(payload, metadata, received_message)
     metadata.all? do |meta|
       value = payload[meta['key']]
       if meta.required && value.nil?
+        received_message.update(error_message: "Required key not found: #{meta['key']}")
         Rails.logger.error { "Required key not found: #{meta['key']}" }
         return false
       elsif meta.regex_validation && !value.match?(meta.regex_validation)
+        received_message.update(error_message: "Regex validation failed for key: #{meta['key']}")
         Rails.logger.error { "Regex validation failed for key: #{meta['key']}" }
         return false
       else
