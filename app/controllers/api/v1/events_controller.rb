@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class EventSetupController < ApplicationController
+    class EventsController < ApplicationController
       def create
         ActiveRecord::Base.transaction do
           service_owner = create_service_owner
@@ -29,7 +29,7 @@ module Api
       end
 
       def create_event(service_owner)
-        Event.create!(event_params.merge(service_owner_id: service_owner.id))
+        service_owner.events.create!(event_params)
       end
 
       def create_message_metadata(event)

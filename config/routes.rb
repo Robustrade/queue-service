@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :dispatch, only: [:create]
-      post 'setup_event', to: 'event_setup#create'
+      post 'events', to: 'events#create'
     end
   end
 end
