@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 20_250_206_104_618) do
+ActiveRecord::Schema[8.0].define(version: 20_250_206_140_654) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'pg_catalog.plpgsql'
 
@@ -46,6 +46,8 @@ ActiveRecord::Schema[8.0].define(version: 20_250_206_104_618) do
     t.datetime 'enqueued_at'
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.string 'error_message'
+    t.json 'error_response'
     t.index ['event_id'], name: 'index_message_receiveds_on_event_id'
   end
 
