@@ -94,6 +94,7 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem 'byebug' # Use `byebug` to debug your application
+  gem 'hirb'
   gem 'web-console'
 end
 
