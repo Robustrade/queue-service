@@ -14,6 +14,12 @@ class MessageProcessorWorker
 
   def process_message(message)
     event_name = message['event_name']
+    if defined?(SMS_PROVIDER_REQ_COUNTER)
+      SMS_PROVIDER_REQ_COUNTER.observe(1,
+                                       queue_name: ENV['MESSAGE_PROCESSOR_SQS_QUEUE'],
+                                       event_name: event_name,
+                                       is_incoming: true)
+    end
     event = Event.find_by(name: event_name)
     Rails.logger.error { "Event not found: #{event_name}" } && return unless event
 

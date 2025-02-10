@@ -7,7 +7,8 @@ require 'prometheus_exporter/middleware'
 
 if ENV['START_PROMETHEUS'] == 'true'
   # Start a local Prometheus Exporter server
-  server = PrometheusExporter::Server::WebServer.new(bind: 'localhost', port: 9394)
+  server = PrometheusExporter::Server::WebServer.new(bind: ENV['MONITORING_HOST'] || 'localhost',
+                                                     port: ENV['MONITORING_PORT'] || 9090)
   server.start
 
   # Use a local client to send metrics directly to the in-process collector
