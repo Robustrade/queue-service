@@ -16,7 +16,7 @@ if ENV['START_PROMETHEUS'] == 'true'
 
   SMS_PROVIDER_REQ_COUNTER = PrometheusExporter::Metric::Counter.new(
     'sqs_requestes',
-    'Counts SMS provider API requests by provider and HTTP status code'
+    'Counts the number of messages processed from the SQS queue by event type'
   )
   server.collector.register_metric(SMS_PROVIDER_REQ_COUNTER)
 end
