@@ -1,0 +1,16 @@
+{
+  "queue_name": "",
+  "event_name": "",
+  "payload": [
+    {
+      "name": "",
+      "value": "JonDoe",
+      "regex_validation": ""
+    },
+    {
+      "name": "age",
+      "value": "25",
+      "regex_validation": ""
+    }
+  ]
+}
