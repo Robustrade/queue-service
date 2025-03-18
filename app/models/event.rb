@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Event < ApplicationRecord
   belongs_to :service_owner
   has_many :message_metadata, class_name: 'MessageMetadatum', dependent: :destroy

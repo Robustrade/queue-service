@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ServiceOwner < ApplicationRecord
   has_many :events, dependent: :destroy
 
