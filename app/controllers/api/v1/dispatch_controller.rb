@@ -11,9 +11,9 @@ module Api
         required_params = params.to_unsafe_h['dispatch']
         MessagePublisher.publish(params[:queue_name], required_params)
 
-        if defined?(SMS_PROVIDER_REQ_COUNTER)
-          SMS_PROVIDER_REQ_COUNTER.observe(1, queue_name: params[:queue_name].to_s,
-                                              is_outgoing: true)
+        if defined?(SQS_MESSAGE_PROCESS_COUNTER)
+          SQS_MESSAGE_PROCESS_COUNTER.observe(1, queue_name: params[:queue_name].to_s,
+                                                 is_outgoing: true)
         end
 
         render json: { message: 'Message sent to the queue' }, status: :ok
