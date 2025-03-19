@@ -13,7 +13,7 @@ credentials = if Rails.env.development?
                   client: Aws::STS::Client.new(region: ENV.fetch('AWS_REGION', nil)),
                   role_arn: ENV.fetch('AWS_ROLE_ARN', nil),
                   web_identity_token_file: ENV.fetch('AWS_WEB_IDENTITY_TOKEN_FILE', nil),
-                  role_session_name: 'MessageRelayServiceSession'
+                  role_session_name: 'QueueServiceSession'
                 )
               end
 Aws.config.update({
