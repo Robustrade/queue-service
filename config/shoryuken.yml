@@ -1,0 +1,6 @@
+aws:
+  region: <%= ENV['AWS_REGION'] %>
+require: './app/workers'
+concurrency: 5
+queues:
+  - <%= ENV['MESSAGE_PROCESSOR_SQS_QUEUE'] %>
