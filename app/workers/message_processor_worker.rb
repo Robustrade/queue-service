@@ -4,6 +4,7 @@ class MessageProcessorWorker
   shoryuken_options queue: ENV['MESSAGE_PROCESSOR_SQS_QUEUE'], auto_delete: true
 
   def perform(sys_msg, body)
+    Rails.logger.info { "Received message: #{body}" }
     message = JSON.parse(body)
     process_message(message)
   rescue StandardError => e
@@ -36,6 +37,7 @@ class MessageProcessorWorker
     )
 
     response = call_callback_url(event.callback_url, message['payload'], event.service_owner.secret_token)
+    Rails.logger.info { "Callback Response: #{response}" }
 
     if response.code == 200
       received_message.update(
