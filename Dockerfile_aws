@@ -16,7 +16,8 @@ RUN rm -f Gemfile.lock
 #ARG RAILS_MASTER_KEY
 RUN gem install rails --version 8.0.1
 RUN bundle install
-RUN VISUAL="mate --wait" bin/rails credentials:edit
+# RUN VISUAL="mate --wait" bin/rails credentials:edit
+RUN rails credentials:edit --environment production
 
 # RUN RAILS_ENV=development
 RUN chmod +x ./entrypoint.sh
