@@ -1,5 +1,5 @@
-# FROM ruby:3.2.2-slim
-FROM 943284168373.dkr.ecr.eu-west-1.amazonaws.com/alpine:ruby3.2.2-slim
+FROM ruby:3.2.2-slim
+# FROM 943284168373.dkr.ecr.eu-west-1.amazonaws.com/alpine:ruby3.2.2-slim
 # Install system dependencies required for building Ruby gems
 RUN apt-get update && apt-get install -y \
     build-essential \
