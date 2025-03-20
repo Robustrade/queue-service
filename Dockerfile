@@ -1,5 +1,5 @@
-FROM ruby:3.2.2-slim
-#FROM 943284168373.dkr.ecr.eu-west-1.amazonaws.com/alpine:ruby3.1.0-slim
+# FROM ruby:3.2.2-slim
+FROM 943284168373.dkr.ecr.eu-west-1.amazonaws.com/alpine:ruby3.2.2-slim
 # Install system dependencies required for building Ruby gems
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -16,6 +16,7 @@ RUN rm -f Gemfile.lock
 #ARG RAILS_MASTER_KEY
 RUN gem install rails --version 8.0.1
 RUN bundle install
+RUN rm -rf /config/credentials.yml.enc
 RUN VISUAL="mate --wait" bin/rails credentials:edit
 
 # RUN RAILS_ENV=development
