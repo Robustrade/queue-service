@@ -21,7 +21,7 @@ gem 'pundit', '~> 2.5'
 gem 'rails', '~> 8.0.1'
 gem 'shoryuken', '~> 6.2', '>= 6.2.1'
 gem 'simplecov', '~> 0.22.0'
-gem 'sorbet', '~> 0.5.11942'
+gem 'sorbet', '~> 0.5.11954'
 gem 'stimulus-rails', '~> 1.3', '>= 1.3.4'
 gem 'thruster', '~> 0.1.12', require: false
 gem 'traceroute', '~> 0.8.1'
