@@ -26,7 +26,7 @@ gem 'stimulus-rails', '~> 1.3', '>= 1.3.4'
 gem 'thruster', '~> 0.1.12', require: false
 gem 'traceroute', '~> 0.8.1'
 gem 'turbo-rails', '~> 2.0', '>= 2.0.13'
-gem 'tzinfo-data', '~> 1.2025', '>= 1.2025.1'
+gem 'tzinfo-data', '~> 1.2025'
 
 group :development, :test do
   gem 'brakeman', '7.0.0', require: false
