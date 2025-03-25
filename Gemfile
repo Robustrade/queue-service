@@ -41,7 +41,7 @@ group :development, :test do
 end
 
 group :development do
-  gem 'byebug', '~> 11.1', '>= 11.1.3'
+  gem 'byebug', '~> 12.0'
   gem 'web-console', '~> 4.2', '>= 4.2.1'
 end
 
