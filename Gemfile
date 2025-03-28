@@ -7,7 +7,7 @@ gem 'bootsnap', '~> 1.18', '>= 1.18.4', require: false
 gem 'bullet', '~> 8.0', '>= 8.0.1'
 gem 'devise', '~> 4.9', '>= 4.9.4'
 gem 'dotenv', '~> 3.1', '>= 3.1.7'
-gem 'httparty', '~> 0.22.0'
+gem 'httparty', '~> 0.23.1'
 gem 'i18n', '~> 1.14', '>= 1.14.7'
 gem 'importmap-rails', '~> 2.1'
 gem 'jbuilder', '~> 2.13'
